@@ -1,30 +1,46 @@
 def encrypt_vigenere(plaintext: str, keyword: str) -> str:
-    """
-    Encrypts plaintext using a Vigenere cipher.
-
-    >>> encrypt_vigenere("PYTHON", "A")
-    'PYTHON'
-    >>> encrypt_vigenere("python", "a")
-    'python'
-    >>> encrypt_vigenere("ATTACKATDAWN", "LEMON")
-    'LXFOPVEFRNHR'
-    """
     ciphertext = ""
-    # PUT YOUR CODE HERE
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    alphabet2 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    text = input()
+    key = input()
+    encrypt_text = str()
+
+    if text.islower():
+        for i, letter in enumerate(text):
+            index = alphabet.index(letter)
+            key_index = alphabet.index(key[i % len(key)])
+            index = (index + key_index) % len(alphabet)
+            encrypt_text += alphabet[index]
+    elif text.isupper():
+        for i, letter in enumerate(text):
+            index = alphabet2.index(letter)
+            key_index = alphabet2.index(key[i % len(key)])
+            index = (index + key_index) % len(alphabet2)
+            encrypt_text += alphabet2[index]
+    print(encrypt_text)
     return ciphertext
 
 
 def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
-    """
-    Decrypts a ciphertext using a Vigenere cipher.
-
-    >>> decrypt_vigenere("PYTHON", "A")
-    'PYTHON'
-    >>> decrypt_vigenere("python", "a")
-    'python'
-    >>> decrypt_vigenere("LXFOPVEFRNHR", "LEMON")
-    'ATTACKATDAWN'
-    """
     plaintext = ""
-    # PUT YOUR CODE HERE
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    alphabet2 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    text = input()
+    key = input()
+    encrypt_text = str()
+
+    if text.islower():
+        for i, letter in enumerate(text):
+            index = alphabet.index(letter)
+            key_index = alphabet.index(key[i % len(key)])
+            index = (index + key_index) % len(alphabet)
+            encrypt_text += alphabet[index]
+    elif text.isupper():
+        for i, letter in enumerate(text):
+            index = alphabet2.index(letter)
+            key_index = alphabet2.index(key[i % len(key)])
+            index = (index + key_index) % len(alphabet2)
+            encrypt_text += alphabet2[index]
+    print(encrypt_text)
     return plaintext
