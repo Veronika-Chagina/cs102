@@ -9,7 +9,6 @@ def is_prime(n: int) -> bool:
     while d * d <= n and n % d != 0:
         d += 2
     return d * d > n
-print(is_prime(int(input("Enter a number: "))))
 
 
 def gcd(a: int, b: int) -> int:
@@ -26,9 +25,6 @@ def multiplicative_inverse(e: int, phi: int) -> int:
         if (((e % phi) * (x % phi)) % phi == 1):
             return x
     return -1
-a = int(input())
-b = int(input())
-print(multiplicative_inverse(a, b))
 
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
