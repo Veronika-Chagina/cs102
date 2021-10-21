@@ -13,14 +13,6 @@ print(is_prime(int(input("Enter a number: "))))
 
 
 def gcd(a: int, b: int) -> int:
-    """
-    Euclid's algorithm for determining the greatest common divisor.
-
-    >>> gcd(12, 15)
-    3
-    >>> gcd(3, 7)
-    1
-    """
     while a != 0 and b != 0:
         if a >= b:
             a %= b
@@ -30,15 +22,13 @@ def gcd(a: int, b: int) -> int:
 
 
 def multiplicative_inverse(e: int, phi: int) -> int:
-    """
-    Euclid's extended algorithm for finding the multiplicative
-    inverse of two numbers.
-
-    >>> multiplicative_inverse(7, 40)
-    23
-    """
-    # PUT YOUR CODE HERE
-    pass
+    for x in range(1, phi):
+        if (((e % phi) * (x % phi)) % phi == 1):
+            return x
+    return -1
+a = int(input())
+b = int(input())
+print(multiplicative_inverse(a, b))
 
 
 def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[int, int]]:
@@ -48,10 +38,10 @@ def generate_keypair(p: int, q: int) -> tp.Tuple[tp.Tuple[int, int], tp.Tuple[in
         raise ValueError("p and q cannot be equal")
 
     # n = pq
-    # PUT YOUR CODE HERE
+    n = p * q
 
     # phi = (p-1)(q-1)
-    # PUT YOUR CODE HERE
+    phi = (p - 1) * (q - 1)
 
     # Choose an integer e such that e and phi(n) are coprime
     e = random.randrange(1, phi)
