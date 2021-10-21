@@ -3,16 +3,6 @@ import typing as tp
 
 
 def is_prime(n: int) -> bool:
-    """
-    Tests to see if a number is prime.
-
-    >>> is_prime(2)
-    True
-    >>> is_prime(11)
-    True
-    >>> is_prime(8)
-    False
-    """
     if n % 2 == 0:
         return n == 2
     d = 3
@@ -31,8 +21,12 @@ def gcd(a: int, b: int) -> int:
     >>> gcd(3, 7)
     1
     """
-    # PUT YOUR CODE HERE
-    pass
+    while a != 0 and b != 0:
+        if a >= b:
+            a %= b
+        else:
+            b %= a
+    return a or b
 
 
 def multiplicative_inverse(e: int, phi: int) -> int:
