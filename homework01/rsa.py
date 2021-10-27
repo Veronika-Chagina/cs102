@@ -3,6 +3,8 @@ import typing as tp
 
 
 def is_prime(n: int) -> bool:
+    if n == 1:
+        return False
     if n % 2 == 0:
         return n == 2
     d = 3
@@ -21,7 +23,7 @@ def gcd(a: int, b: int) -> int:
 
 
 def multiplicative_inverse(e: int, phi: int) -> int:
-    for x in range(1, phi):
+    for x in range(1, phi + 1):
         if ((e % phi) * (x % phi)) % phi == 1:
             return x
     return -1
