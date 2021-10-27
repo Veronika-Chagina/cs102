@@ -4,7 +4,7 @@ import typing as tp
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ciphertext = ""
     shift = 3
-    plaintext = (input()) 
+    plaintext = input()
     for c in plaintext:
         if c.isupper():
             c_unicode = ord(c)
@@ -27,21 +27,21 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
 
 def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     plaintext = ""
-    ciphertext = (input())
+    ciphertext = input()
     shift = 3
     for c in ciphertext:
         if c.isupper():
-            c_index = ord(c) - ord('A')
-            c_og_pos = (c_index - shift) % 26 + ord('A')
+            c_index = ord(c) - ord("A")
+            c_og_pos = (c_index - shift) % 26 + ord("A")
             c_og = chr(c_og_pos)
             decrypted += c_og
         elif c.islower():
-            c_index = ord(c) - ord('a')
-            c_og_pos = (c_index - shift) % 26 + ord('a')
+            c_index = ord(c) - ord("a")
+            c_og_pos = (c_index - shift) % 26 + ord("a")
             c_og = chr(c_og_pos)
             plaintext += c_og
         else:
-            plaintext += c              
+            plaintext += c
     return plaintext
 
 

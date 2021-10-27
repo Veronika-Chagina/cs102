@@ -1,7 +1,7 @@
 def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     ciphertext = ""
-    alphabet = 'abcdefghijklmnopqrstuvwxyz'
-    alphabet2 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+    alphabet2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     text = input()
     key = input()
     encrypt_text = str()
@@ -24,8 +24,8 @@ def encrypt_vigenere(plaintext: str, keyword: str) -> str:
 
 def decrypt_vigenere(ciphertext: str, keyword: str) -> str:
     plaintext = ""
-    alphabet = 'abcdefghijklmnopqrstuvwxyz'
-    alphabet2 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+    alphabet2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     text = input()
     key = input()
     encrypt_text = str()
