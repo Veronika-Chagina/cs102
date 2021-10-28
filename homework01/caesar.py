@@ -22,7 +22,7 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
             ciphertext += c
     return ciphertext
 
-
+    
 def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     plaintext = ""
     for c in ciphertext:
