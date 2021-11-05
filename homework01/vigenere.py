@@ -1,5 +1,6 @@
 import string
 
+
 def encrypt_vigenere(plaintext: str, keyword: str) -> str:
     ciphertext = ""
     alphabet1 = string.ascii_lowercase
