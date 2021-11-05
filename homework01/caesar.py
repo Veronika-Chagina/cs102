@@ -1,5 +1,6 @@
 import typing as tp
 
+
 def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ciphertext = ""
     for character in plaintext:
@@ -15,7 +16,8 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
             ciphertext += new_character
         else:
             ciphertext += character
-      return ciphertext
+    return ciphertext
+
 
 def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     plaintext = ""
