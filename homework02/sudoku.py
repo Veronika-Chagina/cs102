@@ -114,7 +114,7 @@ def generate_sudoku(n: int) -> tp.Optional[tp.List[tp.List[str]]]:
     """Генерация судоку заполненного на N элементов"""
     init = [["." for j in range(9)] for i in range(9)]
     gen = solve(init)
-    if gen is not None:
+    if gen:
         n = min(n, 81)
         while 81 - n != 0:
             for i in range(len(gen)):
