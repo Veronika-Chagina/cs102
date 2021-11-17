@@ -6,7 +6,6 @@ T = tp.TypeVar("T")
 
 
 def read_sudoku(path: tp.Union[str, pathlib.Path]) -> tp.List[tp.List[str]]:
-    """ Прочитать Судоку из указанного файла """
     path = pathlib.Path(path)
     with path.open() as f:
         puzzle = f.read()
@@ -20,14 +19,12 @@ def create_grid(puzzle: str) -> tp.List[tp.List[str]]:
 
 
 def display(grid: tp.List[tp.List[str]]) -> None:
-    """Вывод Судоку """
     width = 2
     line = "+".join(["-" * (width * 3)] * 3)
     for row in range(9):
         print(
             "".join(
-                grid[row][col].center(width) + ("|" if str(col) in "25" else "")
-                for col in range(9)
+                grid[row][col].center(width) + ("|" if str(col) in "25" else "" for col in range(9)
             )
         )
         if str(row) in "25":
@@ -51,11 +48,7 @@ def get_block(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.List[s
     zero = [0, 0]
     zero[0] = 0 if pos[0] < 3 else 3 if 2 < pos[0] < 6 else 6
     zero[1] = 0 if pos[1] < 3 else 3 if 2 < pos[1] < 6 else 6
-    values = [
-        grid[i][j]
-        for i in range(zero[0], zero[0] + 3)
-        for j in range(zero[1], zero[1] + 3)
-    ]
+    values = [grid[i][j] for i in range(zero[0], zero[0] + 3) for j in range(zero[1], zero[1] + 3)]
     return values
 
 
@@ -67,9 +60,7 @@ def find_empty_positions(grid: tp.List[tp.List[str]]) -> tp.Tuple[int, int]:
     return (-1, -1)
 
 
-def find_possible_values(
-    grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]
-) -> tp.Set[str]:
+def find_possible_values(grid: tp.List[tp.List[str]], pos: tp.Tuple[int, int]) -> tp.Set[str]:
     values = set(i for i in "123456789")
     for i, number in enumerate(get_row(grid, pos)):
         values.discard(number)
