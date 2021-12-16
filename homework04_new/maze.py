@@ -12,11 +12,7 @@ def create_grid(rows: int = 15, cols: int = 15) -> List[List[Union[str, int]]]:
 def remove_wall(
     grid: List[List[Union[str, int]]], coord: Tuple[int, int]
 ) -> List[List[Union[str, int]]]:
-    """
-    :param grid:
-    :param coord:
-    :return:
-    """
+
     lny = len(grid[0])
     x = coord[0]
     y = coord[1]
