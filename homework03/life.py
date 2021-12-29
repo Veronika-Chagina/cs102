@@ -17,25 +17,18 @@ class GameOfLife:
         randomize: bool = True,
         max_generations: tp.Optional[float] = float("inf"),
     ) -> None:
-        # Размер клеточного поля
         self.rows, self.cols = size
-        # Предыдущее поколение клеток
         self.prev_generation = self.create_grid()
-        # Текущее поколение клеток
         self.curr_generation = self.create_grid(randomize=randomize)
-        # Максимальное число поколений
         self.max_generations = max_generations
-        # Текущее число поколений
         self.generations = 1
 
     def create_grid(self, randomize: bool = False) -> Grid:
-        # Copy from previous assignment
         if randomize:
             return [[random.randint(0, 1) for _ in range(self.cols)] for _ in range(self.rows)]
         return [[0 for _ in range(self.cols)] for _ in range(self.rows)]
 
     def get_neighbours(self, cell: Cell) -> Cells:
-        # Copy from previous assignment
         neighbours = []
         if cell[0] > 0:
             neighbours.append(self.curr_generation[cell[0] - 1][cell[1]])
@@ -56,7 +49,6 @@ class GameOfLife:
         return neighbours
 
     def get_next_generation(self) -> Grid:
-        # Copy from previous assignment
         new_grid = []
         for y, row in enumerate(self.curr_generation):
             new_row = []
