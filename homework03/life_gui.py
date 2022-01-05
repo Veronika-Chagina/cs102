@@ -14,14 +14,12 @@ class GUI(UI):
         self.speed = speed
 
     def draw_lines(self) -> None:
-        # Copy from previous assignment
         for x in range(0, self.width, self.cell_size):
             pygame.draw.line(self.screen, pygame.Color("black"), (0, x), (self.height, x))
         for y in range(0, self.height, self.cell_size):
             pygame.draw.line(self.screen, pygame.Color("black"), (y, 0), (y, self.width))
 
     def draw_grid(self) -> None:
-        # Copy from previous assignment
         y = 0
         for row in self.life.curr_generation:
             x = 0
@@ -32,7 +30,6 @@ class GUI(UI):
             y += self.cell_size
 
     def run(self) -> None:
-        # Copy from previous assignment
         pygame.init()
         clock = pygame.time.Clock()
         pygame.display.set_caption("Game of Life")
