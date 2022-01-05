@@ -115,7 +115,6 @@ class GameOfLife:
                     f.write(str(elem))
                 f.write("\n")
 
-
 if __name__ == "__main__":
     life0 = GameOfLife.from_file(pathlib.Path("glider.txt"))
     pp(life0.curr_generation)
