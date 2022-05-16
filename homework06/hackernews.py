@@ -16,20 +16,41 @@ def news_list():
 
 @route("/add_label/")
 def add_label():
-    # PUT YOUR CODE HERE
+    s = session()
+    label = request.GET.get("label", "")
+    id = int(request.GET.get("id", ""))
+    row = s.query(News).filter(News.id == id).one()
+    row.label = label
+    s.add(row)
+    s.commit()
     redirect("/news")
 
 
 @route("/update")
 def update_news():
-    # PUT YOUR CODE HERE
+    s = session()
+    url = "https://news.ycombinator.com/"
+    lst = get_news(url)
+    for dic in lst:
+        try:
+            s.query(News).filter(News.title == dic["title"]).one()
+        except sqlalchemy.exc.NoResultFound:
+            new = News(
+                title=dic["title"],
+                author=dic["author"],
+                url=dic["url"],
+                comments=dic["comments"],
+                points=dic["points"],
+            )
+            s.add(new)
+            s.commit()
     redirect("/news")
 
 
 @route("/classify")
 def classify_news():
-    # PUT YOUR CODE HERE
-
+    label_news()
+    redirect("/news")
 
 if __name__ == "__main__":
     run(host="localhost", port=8080)
