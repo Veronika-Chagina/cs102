@@ -1,16 +1,13 @@
-# type: ignore
-from scraputils import get_news
-from sqlalchemy import Column, Integer, String, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column, Integer, String, create_engine  # type: ignore
+from sqlalchemy.ext.declarative import declarative_base  # type: ignore
+from sqlalchemy.orm import sessionmaker  # type: ignore
 
 Base = declarative_base()
 engine = create_engine("sqlite:///news.db")
 session = sessionmaker(bind=engine)
-Base.metadata.create_all(bind=engine)
 
 
-class News(Base):
+class News(Base):  # type: ignore
     __tablename__ = "news"
     id = Column(Integer, primary_key=True)
     title = Column(String)
@@ -21,4 +18,4 @@ class News(Base):
     label = Column(String)
 
 
-s = session()
+Base.metadata.create_all(bind=engine)

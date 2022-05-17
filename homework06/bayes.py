@@ -1,48 +1,60 @@
-# type: ignore
-import csv
-import string
-from collections import defaultdict
+import math
+import re
+from collections import Counter
 
-import numpy as np
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import accuracy_score
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.pipeline import Pipeline
+from sklearn.metrics import accuracy_score  # type: ignore
 
 
 class NaiveBayesClassifier:
-    def __init__(self, alpha=0):
-        self.class_freq = defaultdict(lambda: 0)
-        self.feat_freq = defaultdict(lambda: 0)
+    def __init__(self, alpha=1):
+        self.word_count = Counter({})
+        self.class_count = {}
+        self.alpha = alpha
 
-    def fit(self, X, y):
-        for feature, label in zip(X, y):
-            self.class_freq[label] += 1
-            for value in feature:
-                self.feat_freq[(value, label)] += 1
+    def norm(self, string):
+        no_punc_no_space = re.sub(r"[^\w\s\d+]", "", string.lower()).strip()
+        return [no_punc_no_space][0].split()
 
-        num_samples = len(X)
-        for k in self.class_freq:
-            self.class_freq[k] /= num_samples
+    def fit(self, x, y):
+        """Fit Naive Bayes classifier according to X, y."""
+        self.class_count = dict.fromkeys(set(y), 0)
+        d = 0
+        for i in range(len(x)):
+            mes, lb = x[i], y[i]
+            lst_mes = self.norm(mes)
+            for word in lst_mes:
+                self.class_count[lb] += 1
+                if word not in self.word_count:
+                    d += 1
+                    self.word_count[word] = Counter(dict.fromkeys(set(y), 0))
+                self.word_count[word][lb] += 1
 
-        for value, label in self.feat_freq:
-            self.feat_freq[(value, label)] /= self.class_freq[label]
-
-        return self
+        for w in self.word_count:
+            for c in self.word_count[w]:
+                self.word_count[w][c] = (self.word_count[w][c] + self.alpha) / (
+                    self.class_count[c] + self.alpha * d
+                )
 
     def predict(self, X):
-        return [
-            max(self.class_freq.keys(), key=lambda c: self.calculate_class_freq(x, c)) for x in X
-        ]
+        prediction = []
+        for x in X:
+            last_x = self.norm(x)
+            mx = float("-inf")
+            expect = 0
+            for lb in self.class_count:
+                m = sum(
+                    [
+                        math.log(self.word_count[wrd][lb]) if self.word_count[wrd] else 0
+                        for wrd in last_x
+                    ]
+                )
+                if m > mx:
+                    mx = m
+                    expect = lb
+            prediction.append(expect)
+        return prediction
 
-    def calculate_class_freq(self, X, clss):
-        freq = -np.log(self.class_freq[clss])
-
-        for feat in X:
-            freq += -np.log(self.feat_freq.get((feat, clss), 10 ** (-7)))
-        return freq
-
-    def score(self, X_test, y_test):
-        predictions = self.predict(X_test)
-        print("pred", predictions)
-        return accuracy_score(predictions, y_test)
+    def score(self, x_test, y_test):
+        """Returns the mean accuracy on the given test data and labels."""
+        pr = self.predict(x_test)
+        return accuracy_score(pr, y_test)
