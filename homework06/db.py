@@ -22,15 +22,3 @@ class News(Base):
 
 
 s = session()
-
-# news = get_news("https://news.ycombinator.com/newest", 35)
-# for new in news:
-#     elem = News(
-#         title = new['title'],
-#         author=new['author'],
-#         url = new['url'],
-#         comments = new['comments'],
-#         points = new['points'],
-#     )
-#     s.add(elem)
-# s.commit()
