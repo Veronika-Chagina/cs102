@@ -46,4 +46,3 @@ class NaiveBayesClassifier:
         predictions = self.predict(X_test)
         print("pred", predictions)
         return accuracy_score(predictions, y_test)
-
