@@ -1,4 +1,4 @@
-from bayes import NaiveBayesClassifier
+from bayes import NaiveBayesClassifier, label_news
 from bottle import error, redirect, request, route, run, template  # type: ignore
 from db import News, session
 from scraputils import get_news
