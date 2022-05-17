@@ -57,4 +57,12 @@ def get_news(url, n_pages=1):
     return news
 
 
-# print(get_news("https://news.ycombinator.com/", 3))
+if __name__ == "__main__":
+    url = "https://news.ycombinator.com/newest"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, "html.parser")
+    print(extract_news(soup))
+    print("\n\n\n")
+    print(extract_next_page(soup))
+    print("\n\n\n")
+    print(get_news("https://news.ycombinator.com/newest", n_pages=2)[:4])
