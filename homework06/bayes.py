@@ -1,7 +1,6 @@
 # type: ignore
 import csv
 import string
-import random
 from collections import defaultdict
 
 import numpy as np
@@ -9,7 +8,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
-from db import News, session
 
 
 class NaiveBayesClassifier:
@@ -49,10 +47,32 @@ class NaiveBayesClassifier:
         print("pred", predictions)
         return accuracy_score(predictions, y_test)
 
-def label_news():
-    s = session()
-    rows = s.query(News).filter(News.label == None).all()
-    for row in rows:
-        row.label = random.choice(["good", "maybe", "never"])
-        s.add(row)
-        s.commit()
+
+# def clean(s):
+#     translator = str.maketrans("", "", string.punctuation)
+#     return s.translate(translator)
+#
+#
+# with open("SMSSpamCollection.txt", 'r', encoding='utf-8') as f:
+#         data = list(csv.reader(f, delimiter="\t"))
+#
+#
+# X, y = [], []
+# for target, msg in data:
+#     X.append(msg)
+#     y.append(target)
+# X = [clean(x).lower() for x in X]
+#
+# X_train, y_train, X_test, y_test = X[:3900], y[:3900], X[3900:], y[3900:]
+#
+# model = NaiveBayesClassifier(alpha=1)
+# model.fit(X_train, y_train)
+# print(model.score(X_test, y_test))
+#
+# model = Pipeline([
+#     ('vectorizer', TfidfVectorizer()),
+#     ('classifier', MultinomialNB(alpha=0.05)),
+# ])
+#
+# model.fit(X_train, y_train)
+# print(model.score(X_test, y_test))
