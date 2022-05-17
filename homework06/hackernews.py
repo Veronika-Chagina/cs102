@@ -1,11 +1,9 @@
-# type: ignore
 from bayes import NaiveBayesClassifier
-from bottle import redirect, request, route, run, template
+from bottle import error, redirect, request, route, run, template  # type: ignore
 from db import News, session
 from scraputils import get_news
 
 
-@route("/")
 @route("/news")
 def news_list():
     s = session()
@@ -13,59 +11,93 @@ def news_list():
     return template("news_template", rows=rows)
 
 
-@route("/add_label/")
+@route("/all")
+def all_news_list():
+    s = session()
+    rows = s.query(News).filter(News.label != None).all()
+    return template("all_news_template", rows=rows)
+
+
+@route("/add_label/", method="GET")
 def add_label():
     s = session()
-    lb = request.query.label
-    cur_id = request.query.id
-    post = s.query(News).filter(News.id == cur_id).all()[0]
-    post.label = lb
+    label = request.GET.get("label", "")
+    id = int(request.GET.get("id", ""))
+    row = s.query(News).filter(News.id == id).one()
+    row.label = label
+    s.add(row)
     s.commit()
     redirect("/news")
 
 
-@route("/update_news")
+@route("/update")
 def update_news():
+    new_news = get_news("https://news.ycombinator.com/newest", n_pages=5)
     s = session()
-    news = get_news("https://news.ycombinator.com/newest", 3)
-    for new in news:
+    # print(new_news[:5])
+    for record in new_news:
         if (
-            len(
-                s.query(News)
-                .filter(News.author == new["author"] and News.title == new["title"])
-                .all()
-            )
-            == 0
+            s.query(News)
+            .filter(News.title == record["title"] and News.author == record["author"])
+            .first()
+            is None
         ):
-            elem = News(
-                title=new["title"],
-                author=new["author"],
-                url=new["url"],
-                comments=new["comments"],
-                points=new["points"],
+            data = News(
+                title=record["title"],
+                author=record["author"],
+                url=record["url"],
+                comments=record["comments"],
+                points=record["points"],
+                label=None,
             )
-            s.add(elem)
+            s.add(data)
     s.commit()
     redirect("/news")
 
 
-@route("/recommendations")
-def recommendations():
+@route("/classify")
+def classify_news():
     s = session()
-    empty = s.query(News).filter(News.label == None).all()
-    simp_rows = [x.title for x in empty]
-    class_rows = [x.title for x in s.query(News).filter(News.label != None).all()]
-    labels = [news.label for news in s.query(News).filter(News.label != None).all()]
-    model = NaiveBayesClassifier()
-    model.fit(class_rows, labels)
-    predicts = model.predict(simp_rows)
-    for x in range(len(predicts)):
-        empty[x].label = predicts[x]
-    classified_news = [x for x in empty if x.label == "good"]
-    classified_news.extend([x for x in empty if x.label == "maybe"])
-    classified_news.extend([x for x in empty if x.label == "never"])
-    return template("recs.tpl", rows=classified_news[1:])
+    classifier = NaiveBayesClassifier()
+    X_train = [r.title for r in s.query(News).filter(News.label != None).all()][0:300]
+    y_train = [r.label for r in s.query(News).filter(News.label != None).all()][0:300]
+    predict_db = s.query(News).filter(News.label == None).all()
+    X_predict = [r.title for r in predict_db][0:100]
+    classifier.fit(X_train, y_train)
+    labels = classifier.predict(X_predict)
+    for i in range(30):
+        predict_db[i].label = labels[i]
+    classified = [x for x in predict_db if x.label == "good"]
+    classified.extend([x for x in predict_db if x.label == "maybe"])
+    classified.extend([x for x in predict_db if x.label == "never"])
+    return template("predictions_template.tpl", rows=classified)
+
+
+@error(500)
+def mistake500(code):
+    return (
+        "<head>"
+        '<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>'
+        "</head>"
+        "<h2>Ooops! Something went wrong</h2>"
+        '<th colspan="7">'
+        '<a href="/news" class="ui button">Return to the main page</a>'
+        "</th>"
+    )
+
+
+@error(404)
+def mistake404(code):
+    return (
+        "<head>"
+        '<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>'
+        "</head>"
+        "<h2>Sorry, this page does not exist!</h2>"
+        '<th colspan="7">'
+        '<a href="/news" class="ui button">Return to the main page</a>'
+        "</th>"
+    )
 
 
 if __name__ == "__main__":
-    run(host="localhost", port=8080)
+    run(host="localhost", port=8080, reloader=True)
