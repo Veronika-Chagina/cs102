@@ -1,14 +1,15 @@
-# type: ignore
+import time
 import typing as tp
 
-import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
+import requests  # type: ignore
+from requests.adapters import HTTPAdapter  # type: ignore
+from requests.packages.urllib3.util.retry import Retry  # type: ignore
 
 
 class Session:
     """
     Сессия.
+
     :param base_url: Базовый адрес, на который будут выполняться запросы.
     :param timeout: Максимальное время ожидания ответа от сервера.
     :param max_retries: Максимальное число повторных запросов.
@@ -24,25 +25,35 @@ class Session:
     ) -> None:
         self.base_url = base_url
         self.timeout = timeout
-        self.max_retries = max_retries
         self.session = requests.Session()
-        self.retry_strategy = Retry(
+        errors = []
+        for i in range(400, 600):
+            errors.append(i)
+
+        retry = Retry(
+            method_whitelist=["POST", "GET"],
             total=max_retries,
             backoff_factor=backoff_factor,
-            method_whitelist=["GET", "POST"],
-            status_forcelist=list(range(400, 600)),
+            status_forcelist=errors,
         )
-        self.adapter = HTTPAdapter(max_retries=self.retry_strategy)
-        self.session.mount(base_url, self.adapter)
+        adapter = HTTPAdapter(max_retries=retry)
+        self.session.mount("https://", adapter)
 
     def get(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
-        kwargs["timeout"] = kwargs["timeout"] if "timeout" in kwargs else self.timeout
-        resp = self.session.get(f"{self.base_url}/{url}", *args, **kwargs)
-        resp = resp.json()
-        return resp
+
+        if "timeout" in kwargs:
+            self.timeout = kwargs["timeout"]
+        response = self.session.get(
+            self.base_url + "/" + url, timeout=self.timeout, *args, **kwargs
+        )
+
+        return response
 
     def post(self, url: str, *args: tp.Any, **kwargs: tp.Any) -> requests.Response:
-        kwargs["timeout"] = kwargs["timeout"] if "timeout" in kwargs else self.timeout
-        resp = self.session.post(f"{self.base_url}/{url}", *args, **kwargs)
-        resp = resp.json()
-        return resp
+
+        if "timeout" in kwargs:
+            self.timeout = kwargs["timeout"]
+        response = self.session.post(
+            self.base_url + "/" + url, timeout=self.timeout, *args, **kwargs
+        )
+        return response
