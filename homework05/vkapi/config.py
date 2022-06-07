@@ -5,6 +5,6 @@ import requests as requests  # type: ignore
 
 VK_CONFIG = {
     "domain": "https://api.vk.com/method",
-    "access_token": "7454ef0c9ea041099a6b8cf79f8bc553af7a12f495f4e4dd7f1a4216d33730d21af514a0588932c607fd8",
+    "access_token": "d8684b88d8684b88d8684b8891d81328a7dd868d8684b88ba7c80fec54a1dec04f54283",
     "version": "5.126",
 }
